@@ -482,6 +482,11 @@ body::after{
   letter-spacing:.3px;transition:color .2s;
 }
 .p-expand-btn:hover{color:var(--gold-lt);}
+.p-expand-hint{
+  font-size:.62rem;color:rgba(201,145,58,.35);
+  letter-spacing:.3px;font-family:'Plus Jakarta Sans',sans-serif;
+  pointer-events:none;
+}
 .p-copy-btn{
   margin-left:auto;display:inline-flex;align-items:center;gap:4px;
   font-size:.62rem;letter-spacing:.5px;text-transform:uppercase;font-weight:500;
@@ -497,9 +502,109 @@ body::after{
   font-family:'Fraunces',serif;font-style:italic;font-size:.9rem;
   color:rgba(138,122,97,.35);font-weight:200;
 }
+
+/* ════════════════════════════════
+   PROMPT DETAIL PANEL
+════════════════════════════════ */
+.p-detail-backdrop{
+  position:fixed;inset:0;z-index:1100;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background .3s;
+}
+.p-detail-backdrop.open{
+  background:rgba(0,0,0,.72);
+  pointer-events:auto;
+}
+.p-detail-panel{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);
+  width:100%;max-width:500px;
+  max-height:92dvh;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-bottom:none;
+  border-radius:24px 24px 0 0;
+  z-index:1101;
+  display:flex;flex-direction:column;
+  transition:transform .38s cubic-bezier(.32,1,.4,1);
+  overflow:hidden;
+}
+.p-detail-panel.open{transform:translateX(-50%) translateY(0);}
+
+.p-detail-drag{
+  width:40px;height:4px;border-radius:4px;
+  background:rgba(201,145,58,.2);
+  margin:.75rem auto .25rem;flex-shrink:0;
+}
+.p-detail-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem 1.1rem .6rem;flex-shrink:0;
+}
+.p-detail-close{
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);font-size:1rem;line-height:1;
+  transition:all .2s;flex-shrink:0;
+}
+.p-detail-close:hover{background:rgba(255,255,255,.1);color:var(--text);}
+
+.p-detail-scroll{overflow-y:auto;flex:1;overscroll-behavior:contain;}
+.p-detail-scroll::-webkit-scrollbar{display:none;}
+
+.p-detail-img{width:100%;display:block;object-fit:cover;max-height:260px;}
+.p-detail-img-placeholder{
+  width:100%;height:180px;
+  background:linear-gradient(135deg,var(--bg3),rgba(201,145,58,.05));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+  border-bottom:1px solid var(--border);
+}
+.p-detail-img-placeholder span{font-size:2rem;opacity:.2;}
+.p-detail-img-placeholder p{font-size:.6rem;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);opacity:.4;}
+
+.p-detail-content{padding:1.1rem 1.2rem 2rem;}
+.p-detail-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.p-detail-title{
+  font-size:.95rem;font-weight:500;color:var(--text);flex:1;line-height:1.4;
+}
+.p-detail-body{
+  font-size:.76rem;line-height:1.85;color:var(--muted);font-weight:300;
+  white-space:pre-wrap;margin-bottom:1.2rem;
+}
+.p-detail-copy{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:.72rem;letter-spacing:.6px;text-transform:uppercase;font-weight:500;
+  padding:.75rem;border-radius:12px;cursor:pointer;
+  border:1px solid rgba(201,145,58,.3);color:var(--gold-lt);
+  background:rgba(201,145,58,.06);font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all .2s;
+}
+.p-detail-copy:hover{background:rgba(201,145,58,.13);border-color:rgba(201,145,58,.55);}
+.p-detail-copy.done{color:#7fc97f;border-color:rgba(127,201,127,.3);background:rgba(127,201,127,.06);}
 </style>
 </head>
 <body>
+<!-- PROMPT DETAIL PANEL -->
+<div class="p-detail-backdrop" id="p-detail-backdrop"></div>
+<div class="p-detail-panel" id="p-detail-panel">
+  <div class="p-detail-drag"></div>
+  <div class="p-detail-head">
+    <div></div>
+    <button class="p-detail-close" id="p-detail-close">✕</button>
+  </div>
+  <div class="p-detail-scroll" id="p-detail-scroll">
+    <div id="p-detail-img-wrap"></div>
+    <div class="p-detail-content">
+      <div class="p-detail-meta">
+        <div class="p-detail-title" id="p-detail-title"></div>
+        <div class="p-cat-tag" id="p-detail-tag"></div>
+      </div>
+      <div class="p-detail-body" id="p-detail-body"></div>
+      <button class="p-detail-copy" id="p-detail-copy">⎘ Copy prompt</button>
+    </div>
+  </div>
+</div>
+
 <canvas id="particles"></canvas>
 
 <!-- TAB NAV -->
@@ -1023,6 +1128,55 @@ function makePlaceholder(){
   d.innerHTML='<span>✦</span><p>output preview</p>';
   return d;
 }
+
+/* ── DETAIL PANEL ── */
+const backdrop=document.getElementById('p-detail-backdrop');
+const panel=document.getElementById('p-detail-panel');
+const detailClose=document.getElementById('p-detail-close');
+const detailImgWrap=document.getElementById('p-detail-img-wrap');
+const detailTitle=document.getElementById('p-detail-title');
+const detailTag=document.getElementById('p-detail-tag');
+const detailBody=document.getElementById('p-detail-body');
+const detailCopy=document.getElementById('p-detail-copy');
+let detailPromptText='';
+
+function openDetail(p){
+  detailTitle.textContent=p.title;
+  detailTag.textContent=p.cat;
+  detailBody.textContent=p.text;
+  detailPromptText=p.text;
+  detailImgWrap.innerHTML='';
+  if(p.image){
+    const img=document.createElement('img');
+    img.className='p-detail-img';img.alt=p.title;
+    detailImgWrap.appendChild(img);
+    probePromptImage(p.image,img);
+  } else {
+    detailImgWrap.innerHTML='<div class="p-detail-img-placeholder"><span>✦</span><p>output preview</p></div>';
+  }
+  detailCopy.textContent='⎘ Copy prompt';detailCopy.classList.remove('done');
+  document.getElementById('p-detail-scroll').scrollTop=0;
+  backdrop.classList.add('open');panel.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDetail(){
+  backdrop.classList.remove('open');panel.classList.remove('open');
+  document.body.style.overflow='';
+}
+detailClose.addEventListener('click',closeDetail);
+backdrop.addEventListener('click',closeDetail);
+detailCopy.addEventListener('click',()=>{
+  navigator.clipboard.writeText(detailPromptText).then(()=>{
+    detailCopy.textContent='✓ Copied!';detailCopy.classList.add('done');
+    setTimeout(()=>{detailCopy.textContent='⎘ Copy prompt';detailCopy.classList.remove('done');},2000);
+  });
+});
+let touchStartY=0;
+panel.addEventListener('touchstart',e=>{touchStartY=e.touches[0].clientY;},{passive:true});
+panel.addEventListener('touchend',e=>{
+  if(e.changedTouches[0].clientY-touchStartY>80)closeDetail();
+},{passive:true});
+
 const allCats=['all',...new Set(PROMPTS.map(p=>p.cat))];
 const catsEl=document.getElementById('prompts-cats');
 let activeCat='all';
@@ -1050,7 +1204,7 @@ function render(){
   grid.innerHTML='';
   if(!list.length){grid.innerHTML='<div class="p-empty">No prompts here yet.</div>';return;}
   list.forEach(p=>{
-    const card=document.createElement('div');card.className='p-card';
+    const card=document.createElement('div');card.className='p-card';card.style.cursor='pointer';
     const imgHTML=p.image
       ?`<img class="p-card-img" alt="${p.title}" loading="lazy">`
       :`<div class="p-card-img-placeholder"><span>✦</span><p>output preview</p></div>`;
@@ -1063,23 +1217,21 @@ function render(){
         </div>
         <div class="p-prompt-text">${p.text.replace(/\n/g,'<br>')}</div>
         <div class="p-card-footer">
-          <button class="p-expand-btn">show more</button>
+          <span class="p-expand-hint">tap to open ↗</span>
           <button class="p-copy-btn">⎘ Copy</button>
         </div>
       </div>`;
     const txt=card.querySelector('.p-prompt-text');
-    const exp=card.querySelector('.p-expand-btn');
     const cpy=card.querySelector('.p-copy-btn');
-    requestAnimationFrame(()=>{if(txt.scrollHeight<=txt.clientHeight+4)exp.style.display='none';});
-    exp.addEventListener('click',()=>{
-      const open=txt.classList.toggle('open');
-      exp.textContent=open?'show less':'show more';
-    });
-    cpy.addEventListener('click',()=>{
+    cpy.addEventListener('click',e=>{
+      e.stopPropagation();
       navigator.clipboard.writeText(p.text).then(()=>{
         cpy.textContent='✓ Copied!';cpy.classList.add('done');
         setTimeout(()=>{cpy.textContent='⎘ Copy';cpy.classList.remove('done');},2000);
       });
+    });
+    card.addEventListener('click',e=>{
+      if(!e.target.closest('.p-copy-btn'))openDetail(p);
     });
     grid.appendChild(card);
     if(p.image){
