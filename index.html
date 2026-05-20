@@ -363,10 +363,171 @@ body::after{
   text-align:center;font-size:.6rem;letter-spacing:1px;
   color:rgba(138,122,97,.3);margin-top:2.5rem;text-transform:uppercase;
 }
+
+/* ════════════════════════════════
+   TOP TAB NAV
+════════════════════════════════ */
+.tab-nav{
+  position:sticky;top:0;z-index:900;
+  width:100%;max-width:500px;
+  display:flex;gap:0;
+  background:rgba(11,7,4,.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:.55rem 1.5rem;
+}
+.tab-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:500;
+  letter-spacing:1.2px;text-transform:uppercase;
+  padding:.55rem 0;border:none;background:transparent;cursor:pointer;
+  color:var(--muted);border-bottom:2px solid transparent;
+  transition:color .25s, border-color .25s;
+}
+.tab-btn.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt);}
+.tab-btn svg{width:13px;height:13px;flex-shrink:0;}
+
+/* ════════════════════════════════
+   COFFEE CHIP
+════════════════════════════════ */
+.coffee-chip{
+  display:inline-flex;align-items:center;gap:5px;margin-top:.55rem;
+  text-decoration:none;background:transparent;
+  border:1px solid rgba(201,145,58,.18);border-radius:100px;
+  padding:4px 13px 4px 10px;color:rgba(201,145,58,.55);
+  font-size:.65rem;letter-spacing:.8px;text-transform:uppercase;font-weight:400;
+  transition:color .3s,border-color .3s,background .3s;
+}
+.coffee-chip:hover{color:var(--gold-lt);border-color:rgba(201,145,58,.45);background:rgba(201,145,58,.05);}
+.coffee-chip span{font-size:.82rem;}
+
+/* ════════════════════════════════
+   PROMPTS VIEW
+════════════════════════════════ */
+#view-prompts{
+  display:none;width:100%;max-width:500px;
+  padding:1.8rem 1.5rem 5rem;
+  flex-direction:column;align-items:stretch;
+  position:relative;z-index:1;
+}
+#view-prompts.active{display:flex;}
+
+.prompts-header{margin-bottom:1.4rem;}
+.prompts-title{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:200;
+  font-size:1.9rem;color:#FFF8EE;line-height:1;margin-bottom:.3rem;
+}
+.prompts-sub{font-size:.72rem;color:var(--muted);font-weight:300;line-height:1.6;}
+
+.prompts-search{
+  width:100%;background:rgba(28,24,16,.8);border:1px solid var(--border);
+  border-radius:12px;padding:.65rem 1rem;
+  color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;
+  outline:none;margin-bottom:1rem;transition:border-color .25s;
+}
+.prompts-search::placeholder{color:var(--muted);}
+.prompts-search:focus{border-color:var(--border-hi);}
+
+.prompts-cats{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.2rem;}
+.pcat-btn{
+  font-size:.6rem;letter-spacing:.7px;text-transform:uppercase;font-weight:500;
+  padding:4px 12px;border-radius:100px;cursor:pointer;
+  border:1px solid var(--border);color:var(--muted);background:transparent;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .22s;
+}
+.pcat-btn:hover{border-color:var(--border-hi);color:var(--text);}
+.pcat-btn.active{border-color:rgba(201,145,58,.5);background:rgba(201,145,58,.08);color:var(--gold-lt);}
+
+.prompts-grid{display:flex;flex-direction:column;gap:1rem;}
+
+.p-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+  transition:border-color .25s,transform .25s;
+}
+.p-card:hover{border-color:var(--border-hi);transform:translateY(-2px);}
+
+.p-card-img{
+  width:100%;aspect-ratio:9/6;object-fit:cover;display:block;
+  background:var(--bg3);
+}
+.p-card-img-placeholder{
+  width:100%;aspect-ratio:9/6;
+  background:linear-gradient(135deg,var(--bg3) 0%,rgba(201,145,58,.04) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+  border-bottom:1px solid var(--border);
+}
+.p-card-img-placeholder span{font-size:1.6rem;opacity:.3;}
+.p-card-img-placeholder p{font-size:.6rem;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);opacity:.5;}
+
+.p-card-body{padding:.9rem 1rem;}
+.p-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;margin-bottom:.5rem;}
+.p-card-title{font-size:.82rem;font-weight:500;color:var(--text);line-height:1.4;flex:1;}
+.p-cat-tag{
+  font-size:.52rem;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--gold);background:var(--gold-dim);
+  border:1px solid rgba(201,145,58,.15);border-radius:100px;
+  padding:2px 8px;white-space:nowrap;flex-shrink:0;margin-top:2px;
+}
+.p-prompt-text{
+  font-size:.73rem;line-height:1.75;color:var(--muted);font-weight:300;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  margin-bottom:.7rem;transition:all .3s;
+}
+.p-prompt-text.open{-webkit-line-clamp:unset;}
+.p-card-footer{display:flex;align-items:center;gap:.5rem;}
+.p-expand-btn{
+  font-size:.62rem;color:rgba(201,145,58,.4);background:none;border:none;
+  cursor:pointer;padding:0;font-family:'Plus Jakarta Sans',sans-serif;
+  letter-spacing:.3px;transition:color .2s;
+}
+.p-expand-btn:hover{color:var(--gold-lt);}
+.p-copy-btn{
+  margin-left:auto;display:inline-flex;align-items:center;gap:4px;
+  font-size:.62rem;letter-spacing:.5px;text-transform:uppercase;font-weight:500;
+  padding:5px 13px;border-radius:100px;cursor:pointer;
+  border:1px solid rgba(201,145,58,.25);color:var(--gold-lt);
+  background:transparent;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;
+}
+.p-copy-btn:hover{background:rgba(201,145,58,.1);border-color:rgba(201,145,58,.5);}
+.p-copy-btn.done{color:#7fc97f;border-color:rgba(127,201,127,.3);background:rgba(127,201,127,.06);}
+
+.p-empty{
+  text-align:center;padding:3rem 0;
+  font-family:'Fraunces',serif;font-style:italic;font-size:.9rem;
+  color:rgba(138,122,97,.35);font-weight:200;
+}
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
+
+<!-- TAB NAV -->
+<nav class="tab-nav" id="tab-nav">
+  <button class="tab-btn active" id="tab-home" onclick="switchTab('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    Home
+  </button>
+  <button class="tab-btn" id="tab-prompts" onclick="switchTab('prompts')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    Prompts
+  </button>
+</nav>
+
+<!-- PROMPTS VIEW -->
+<div id="view-prompts">
+  <div class="prompts-header">
+    <div class="prompts-title">Prompts</div>
+    <p class="prompts-sub">AI prompts I actually use — copy & run.</p>
+  </div>
+  <input class="prompts-search" id="prompts-search" type="text" placeholder="Search prompts…">
+  <div class="prompts-cats" id="prompts-cats"></div>
+  <div class="prompts-grid" id="prompts-grid"></div>
+</div>
 
 <div class="page">
 
@@ -385,7 +546,10 @@ body::after{
     <div class="handle-badge">
       <div class="live-dot"></div>
       <span>@ankitaa_jpeg</span>
-    </div>
+    </div><br>
+    <a class="coffee-chip" href="https://www.instamojo.com/@heartscript/" target="_blank" rel="noopener">
+      <span>☕</span> buy me a coffee
+    </a>
   </div>
 
   <div class="rule reveal"><span class="rule-glyph">✦</span></div>
@@ -398,64 +562,7 @@ body::after{
     <span class="tl" style="font-size:.85em;opacity:0">And I drink coffee to survive all three.</span>
   </p>
 
-  <!-- ① ABOUT ME -->
-  <div class="card reveal">
-    <p class="card-label">About me</p>
-    <p class="about-body">Part-time runner (full-time regretter). Gym girlie who takes aesthetics very seriously. Photographer who catches everyone's best angles — except her own blurry selfies. Fuelled entirely by coffee and delusion. 📸🏃‍♀️</p>
-  </div>
-
-  <div class="sep reveal"><span>✦</span></div>
-
-  <!-- ② MY WORLD -->
-  <div class="card reveal">
-    <p class="card-label">My world</p>
-    <div class="world-grid" id="world-grid">
-      <div class="world-item" data-delay="0">
-        <div class="world-num">01</div>
-        <div class="world-title">Runner</div>
-        <div class="world-desc">Early mornings, empty roads, endorphins that lie to me every single time.</div>
-      </div>
-      <div class="world-item" data-delay="100">
-        <div class="world-num">02</div>
-        <div class="world-title">Gym girlie</div>
-        <div class="world-desc">Lifts heavy, takes aesthetics seriously, probably filming herself.</div>
-      </div>
-      <div class="world-item" data-delay="200">
-        <div class="world-num">03</div>
-        <div class="world-title">Photographer</div>
-        <div class="world-desc">Catches everyone's best angles. Her own selfies? Still blurry. Always.</div>
-      </div>
-      <div class="world-item" data-delay="300">
-        <div class="world-num">04</div>
-        <div class="world-title">Coffee addict</div>
-        <div class="world-desc">The only thread holding the running, gymming & shooting together.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sep reveal"><span>✦</span></div>
-
-  <!-- ③ STATS -->
-  <div class="card reveal" style="padding:0;overflow:hidden;">
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-num" data-target="5" data-suffix="am">0</div>
-        <div class="stat-label">wake-up time</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num" data-target="1200" data-suffix="+">0</div>
-        <div class="stat-label">photos shot</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">∞</div>
-        <div class="stat-label">coffees needed</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sep reveal"><span>✦</span></div>
-
-  <!-- ④ BREW CARD + SUPPORTER TICKER -->
+  <!-- ① BREW CARD + SUPPORTER TICKER -->
   <div class="card reveal">
     <p class="card-label">Coffee fund <span class="flag-chip">🇮🇳 Instamojo</span></p>
 
@@ -560,7 +667,44 @@ body::after{
 
   <div class="sep reveal"><span>✦</span></div>
 
-  <!-- ⑤ MANIFESTO -->
+  <!-- ② ABOUT ME -->
+  <div class="card reveal">
+    <p class="card-label">About me</p>
+    <p class="about-body">Part-time runner (full-time regretter). Gym girlie who takes aesthetics very seriously. Photographer who catches everyone's best angles — except her own blurry selfies. Fuelled entirely by coffee and delusion. 📸🏃‍♀️</p>
+  </div>
+
+  <div class="sep reveal"><span>✦</span></div>
+
+  <!-- ③ MY WORLD -->
+  <div class="card reveal">
+    <p class="card-label">My world</p>
+    <div class="world-grid" id="world-grid">
+      <div class="world-item" data-delay="0">
+        <div class="world-num">01</div>
+        <div class="world-title">Runner</div>
+        <div class="world-desc">Early mornings, empty roads, endorphins that lie to me every single time.</div>
+      </div>
+      <div class="world-item" data-delay="100">
+        <div class="world-num">02</div>
+        <div class="world-title">Gym girlie</div>
+        <div class="world-desc">Lifts heavy, takes aesthetics seriously, probably filming herself.</div>
+      </div>
+      <div class="world-item" data-delay="200">
+        <div class="world-num">03</div>
+        <div class="world-title">Photographer</div>
+        <div class="world-desc">Catches everyone's best angles. Her own selfies? Still blurry. Always.</div>
+      </div>
+      <div class="world-item" data-delay="300">
+        <div class="world-num">04</div>
+        <div class="world-title">Coffee addict</div>
+        <div class="world-desc">The only thread holding the running, gymming & shooting together.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep reveal"><span>✦</span></div>
+
+  <!-- ④ MANIFESTO -->
   <div class="card reveal">
     <p class="card-label">What I believe</p>
     <div id="manifesto-lines">
@@ -789,6 +933,162 @@ const brewIO=new IntersectionObserver(entries=>{
   }
 },{threshold:.2});
 brewIO.observe(document.querySelector('.brew-top'));
+/* ── TAB SWITCHING ── */
+const mainPage=document.querySelector('.page');
+function switchTab(tab){
+  const isPrompts=tab==='prompts';
+  document.getElementById('tab-home').classList.toggle('active',!isPrompts);
+  document.getElementById('tab-prompts').classList.toggle('active',isPrompts);
+  mainPage.style.display=isPrompts?'none':'flex';
+  document.getElementById('view-prompts').classList.toggle('active',isPrompts);
+}
+
+/* ══════════════════════════════════
+   PROMPTS DATA
+   ─────────────────────────────────
+   To add a prompt:
+   {
+     cat:   'category name',
+     title: 'Short display title',
+     image: 'filename.jpg',   // put image in same folder; leave '' for no image
+     text:  `Your full prompt here`
+   }
+══════════════════════════════════ */
+const PROMPTS=[
+  {
+    cat:'fitness',
+    title:'Apple Fitness Achievement Card',
+    image: 'prompts/apple-fitness.jpg',
+    text:`Ultra-realistic Apple Fitness achievement card screenshot styled exactly like an authentic iPhone shared workout summary, recreating the premium metallic "5K Run" award aesthetic with cinematic reflections, glassmorphism stat panels, and dramatic sunset lake background. The image should look indistinguishable from a real Apple Fitness screenshot captured from an iPhone and reposted on Instagram stories.
+Main layout:
+* Large metallic silver "5K Run" title at top left in authentic Apple Fitness typography
+* Date displayed underneath in clean Apple San Francisco font style
+* Large embossed metallic circular "5K" medal logo at top right with reflective chrome finish
+* Background: calm lake during golden-hour sunset with trees silhouetted against warm sunlight, soft cinematic bloom, subtle reflections in water
+* Dark translucent rounded-rectangle glass panels floating over background
+* Premium Apple UI aesthetic with subtle gradients, realistic reflections, soft shadows, and blurred transparency effects
+Replace ALL stats dynamically using my own Apple Workout data:
+* Workout Time: [WORKOUT_TIME]
+* Elapsed Time: [ELAPSED_TIME]
+* Distance: [DISTANCE]
+* Active Calories: [ACTIVE_CALORIES]
+* Total Calories: [TOTAL_CALORIES]
+* Elevation Gain: [ELEVATION_GAIN]
+* Average Power: [POWER]
+* Cadence: [CADENCE]
+* Pace: [PACE]
+Lower section:
+* Purple "Effort" panel with large number rating and "All Out" label
+* Weather panel with temperature + weather icon
+* Humidity panel
+* Route mini-map with neon green GPS route line
+* Small Apple Fitness icons beside every metric in correct Apple style
+Visual style requirements:
+* EXACT Apple Fitness app visual language
+* Hyper-realistic iPhone screenshot appearance
+* Metallic reflections and glossy UI panels
+* Soft cinematic contrast
+* Slight HDR effect
+* Warm sunset lighting
+* Crisp typography
+* Realistic mobile screenshot compression
+* No AI-art look
+* No extra elements
+* Natural Apple ecosystem color palette
+* Realistic glass blur/transparency
+* Subtle vignette around edges
+* Rounded iPhone screenshot corners
+Aspect ratio: Vertical smartphone story format (9:16)
+Quality: Photorealistic · Extremely detailed UI recreation · Authentic Apple Fitness aesthetic · Looks like a genuine shared workout achievement`
+  },
+  // ── ADD MORE PROMPTS BELOW ──
+];
+
+/* ── PROMPT IMAGE PROBE (jpg → jpeg → png) ── */
+function probePromptImage(base, el){
+  const exts=['jpg','jpeg','png'];
+  // if base already has an extension, use it directly
+  if(/\.(jpe?g|png)$/i.test(base)){el.src=base;return;}
+  (function try_(i){
+    if(i>=exts.length){el.parentElement&&el.replaceWith(makePlaceholder());return;}
+    const img=new Image();
+    img.onload=()=>{el.src=img.src;};
+    img.onerror=()=>try_(i+1);
+    img.src=`${base}.${exts[i]}`;
+  })(0);
+}
+function makePlaceholder(){
+  const d=document.createElement('div');
+  d.className='p-card-img-placeholder';
+  d.innerHTML='<span>✦</span><p>output preview</p>';
+  return d;
+}
+const allCats=['all',...new Set(PROMPTS.map(p=>p.cat))];
+const catsEl=document.getElementById('prompts-cats');
+let activeCat='all';
+allCats.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='pcat-btn'+(c==='all'?' active':'');
+  b.textContent=c==='all'?'All':c.charAt(0).toUpperCase()+c.slice(1);
+  b.addEventListener('click',()=>{
+    catsEl.querySelectorAll('.pcat-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');activeCat=c;render();
+  });
+  catsEl.appendChild(b);
+});
+
+/* ── RENDER PROMPTS ── */
+const grid=document.getElementById('prompts-grid');
+const searchEl=document.getElementById('prompts-search');
+let searchQ='';
+function render(){
+  const list=PROMPTS.filter(p=>{
+    const catOk=activeCat==='all'||p.cat===activeCat;
+    const q=searchQ.toLowerCase();
+    return catOk&&(!q||p.title.toLowerCase().includes(q)||p.text.toLowerCase().includes(q));
+  });
+  grid.innerHTML='';
+  if(!list.length){grid.innerHTML='<div class="p-empty">No prompts here yet.</div>';return;}
+  list.forEach(p=>{
+    const card=document.createElement('div');card.className='p-card';
+    const imgHTML=p.image
+      ?`<img class="p-card-img" alt="${p.title}" loading="lazy">`
+      :`<div class="p-card-img-placeholder"><span>✦</span><p>output preview</p></div>`;
+    card.innerHTML=`
+      ${imgHTML}
+      <div class="p-card-body">
+        <div class="p-card-top">
+          <div class="p-card-title">${p.title}</div>
+          <div class="p-cat-tag">${p.cat}</div>
+        </div>
+        <div class="p-prompt-text">${p.text.replace(/\n/g,'<br>')}</div>
+        <div class="p-card-footer">
+          <button class="p-expand-btn">show more</button>
+          <button class="p-copy-btn">⎘ Copy</button>
+        </div>
+      </div>`;
+    const txt=card.querySelector('.p-prompt-text');
+    const exp=card.querySelector('.p-expand-btn');
+    const cpy=card.querySelector('.p-copy-btn');
+    requestAnimationFrame(()=>{if(txt.scrollHeight<=txt.clientHeight+4)exp.style.display='none';});
+    exp.addEventListener('click',()=>{
+      const open=txt.classList.toggle('open');
+      exp.textContent=open?'show less':'show more';
+    });
+    cpy.addEventListener('click',()=>{
+      navigator.clipboard.writeText(p.text).then(()=>{
+        cpy.textContent='✓ Copied!';cpy.classList.add('done');
+        setTimeout(()=>{cpy.textContent='⎘ Copy';cpy.classList.remove('done');},2000);
+      });
+    });
+    grid.appendChild(card);
+    if(p.image){
+      const imgEl=card.querySelector('.p-card-img');
+      if(imgEl) probePromptImage(p.image,imgEl);
+    }
+  });
+}
+searchEl.addEventListener('input',e=>{searchQ=e.target.value;render();});
+render();
 </script>
-</body>
 </html>
